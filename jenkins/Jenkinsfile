@@ -10,21 +10,13 @@ pipeline
                 echo "This is build stage"
              }
         }
-
-        stage('test') 
+        post 
         {
-             steps 
-             {
-                echo "This is test stage"
-             }
+            success 
+            {
+                archiveArtifacts artifacts: '**/target/*.jar'
+            }
         }
 
-        stage('deploy') 
-        {
-             steps 
-             {
-                echo "This is deploy stage"
-             }
-        }
    }
 }
