@@ -9,13 +9,13 @@ pipeline
              {
                 echo "This is build stage"
              }
-        }
         post 
         {
             success 
             {
                 archiveArtifacts artifacts: '**/target/*.jar'
             }
+        }
         }
 
    }
