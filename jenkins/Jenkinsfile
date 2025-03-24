@@ -1,58 +1,52 @@
-pipeline
-{
+pipeline {
     agent any
-    tools 
-    {
+    tools {
         maven 'my-maven'
     }
     environment {
         Name = "Bharath"
     }
     parameters {
-  string defaultValue: 'Kumar N R', name: 'lastname'
-}
-
-
-
-    stages
-    {
-        stage('build') 
-        {
-             steps 
-             {
-                sh 'mvn clean package'
-                echo "hello ${name} ${params.lastname}"
-             }
+        string(defaultValue: 'Kumar N R', name: 'lastname')
+    }
+    
+    stages {
+        stage('build') {
+            steps {
+                sh 'mvn clean package -DskipTests=true'
+                echo "hello ${Name} ${params.lastname}"
+                stash name: 'buildArtifacts', includes: '**/target/*.jar'
+            }
         }
 
-        stage('test')
-        {
-            parallel
-            {
-                stage('testA')
-                {
-                    steps
-                    {
+        stage('test') {
+            parallel {
+                stage('testA') {
+                    steps {
                         echo "This is test A"
+                        sh 'mvn test'
                     }
                 }
-                stage('testB')
-                {
-                    steps
-                    {
+                stage('testB') {
+                    steps {
                         echo "This is test B"
+                        sh 'mvn test'
                     }
                 }
             }
-            post 
-        {
-            success 
-            {
-                archiveArtifacts artifacts: '**/target/*.jar'
+            post {
+                success {
+                    archiveArtifacts artifacts: '**/target/*.jar'
+                }
             }
         }
 
+        stage('deploy') {
+            steps {
+                unstash 'buildArtifacts'
+                echo "Deploying the application..."
+                sh 'java -jar $WORKSPACE/target/my-app-1.0-SNAPSHOT.jar'
+            }
         }
-
-   }
+    }
 }
