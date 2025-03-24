@@ -1,9 +1,19 @@
 pipeline
 {
     agent any
-    tools {
-  maven 'my-maven'
+    tools 
+    {
+        maven 'my-maven'
+    }
+    environment {
+        Name = "Bharath"
+    }
+    parameters {
+  string defaultValue: 'Kumar N R', name: 'lastname'
 }
+
+
+
     stages
     {
         stage('build') 
