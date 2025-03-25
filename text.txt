@@ -1,0 +1,5 @@
+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
+
+
+9.43.69.216
+curl -sO http://9.43.69.216:8080/jnlpJars/agent.jar
