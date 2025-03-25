@@ -33,6 +33,12 @@ pipeline {
                         sh 'mvn test'
                     }
                 }
+                stage('testC') {
+                    steps {
+                        echo "This is test C"
+                        sh 'mvn test'
+                    }
+                }
             }
             post {
                 success {
