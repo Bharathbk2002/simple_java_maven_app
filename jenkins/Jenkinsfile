@@ -1,22 +1,22 @@
 pipeline {
     agent {
-  label 'devServer'
-}
+        label 'devServer'
+    }
     tools {
-  maven 'my-maven'
-}
+        maven 'my-maven'
+    }
     environment {
         Name = "Bharath"
     }
     parameters {
-  choice choices: ['dev', 'prod'], name: 'select_environment'
+        choice choices: ['dev', 'prod'], name: 'select_environment'
     }
     
     stages {
         stage('build') {
             steps {
                 sh 'mvn clean package -DskipTests=true'
-                echo "hello ${Name} ${params.lastname}"
+                echo "hello ${Name}"
                 stash name: 'buildArtifacts', includes: '**/target/*.jar'
             }
         }
@@ -24,14 +24,14 @@ pipeline {
         stage('test') {
             parallel {
                 stage('testA') {
-                    agent {label 'devServer'}
+                    agent { label 'devServer' }
                     steps {
                         echo "This is test A"
                         sh 'mvn test'
                     }
                 }
                 stage('testB') {
-                    agent {label 'devServer'}
+                    agent { label 'devServer' }
                     steps {
                         echo "This is test B"
                         sh 'mvn test'
@@ -46,10 +46,13 @@ pipeline {
         }
 
         stage('deploy_dev') {
-            when{expression{params.select_environment=='dev'}beforeAgent=true}
-            agent 
-            {
-                    label 'devServer'
+            when {
+                expression {
+                    return params.select_environment == 'dev'
+                }
+            }
+            agent {
+                label 'devServer'
             }
             steps {
                 unstash 'buildArtifacts'
