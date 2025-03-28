@@ -1,6 +1,6 @@
 void greet()
 {
     println("This is message from groovy script")
-    println("-------------------------- ")
+    println("--------------------------------- ")
 }
 return this
