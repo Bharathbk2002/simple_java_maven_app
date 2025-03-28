@@ -15,6 +15,12 @@ pipeline {
     stages {
         stage('build') {
             steps {
+                script
+                {
+                    file = load "script.groovy"
+                    file.greet()
+                }
+
                 sh 'mvn clean package -DskipTests=true'
                 echo "hello ${Name}"
                 stash name: 'buildArtifacts', includes: '**/target/*.jar'
@@ -55,6 +61,26 @@ pipeline {
                 label 'devServer'
             }
             steps {
+                unstash 'buildArtifacts'
+                echo "Deploying the application..."
+                sh 'java -jar $WORKSPACE/target/my-app-1.0-SNAPSHOT.jar'
+            }
+        }
+
+        stage('deploy_prod') {
+            when {
+                expression {
+                    return params.select_environment == 'prod'
+                }
+            }
+            agent {
+                label 'prodServer'
+            }
+            steps {
+                timeout(time:5 , unit:'DAYS')
+                {
+                    input message:'Deployment Approved'
+                }
                 unstash 'buildArtifacts'
                 echo "Deploying the application..."
                 sh 'java -jar $WORKSPACE/target/my-app-1.0-SNAPSHOT.jar'
