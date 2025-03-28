@@ -9,7 +9,7 @@ pipeline {
         Name = "Bharath"
     }
     parameters {
-        string(defaultValue: 'Kumar N R', name: 'lastname')
+  choice choices: ['dev', 'prod'], name: 'select_environment'
     }
     
     stages {
@@ -24,12 +24,14 @@ pipeline {
         stage('test') {
             parallel {
                 stage('testA') {
+                    agent {label 'devServer'}
                     steps {
                         echo "This is test A"
                         sh 'mvn test'
                     }
                 }
                 stage('testB') {
+                    agent {label 'devServer'}
                     steps {
                         echo "This is test B"
                         sh 'mvn test'
@@ -43,7 +45,12 @@ pipeline {
             }
         }
 
-        stage('deploy') {
+        stage('deploy_dev') {
+            when{expression{params.select_environment=='dev'}beforeAgent=true}
+            agent 
+            {
+                    label 'devServer'
+            }
             steps {
                 unstash 'buildArtifacts'
                 echo "Deploying the application..."
