@@ -20,7 +20,7 @@ pipeline {
                     def file = load "script.groovy"
                     file.greet()  
                 }
-                sharedLib.build()
+                sharedLib()
                 echo "hello ${Name}"
                 stash name: 'buildArtifacts', includes: '**/target/*.jar'
             }
