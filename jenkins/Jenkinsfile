@@ -8,6 +8,7 @@ pipeline {
     }
     environment {
         Name = "Bharath"
+        
     }
     parameters {
         choice choices: ['dev', 'prod'], name: 'Select_environment'
@@ -21,11 +22,10 @@ pipeline {
                     file.greet()  
                 }
                 sharedLib()
-                // script
-                // {
-                //     calculator.add(10,20)
-                //     calculator.sub(20,10)
-                // }
+                def calc = new calculator()
+                    calc.add(10,20)
+                    calc.sub(20,10)
+               
                 echo "hello ${Name}"
                 stash name: 'buildArtifacts', includes: '**/target/*.jar'
             }
