@@ -1,4 +1,4 @@
-@Library('shared_library') _
+// @Library('shared_library') _
 pipeline {
     agent {
         label 'devServer'
@@ -20,7 +20,9 @@ pipeline {
                     def file = load "script.groovy"
                     file.greet()  
                 }
-                sharedLib()
+                // sharedLib()
+                sh 'mvn clean package -DskipTests=true'
+                stash name: 'buildArtifacts', includes: '**/target/*.jar'
                 echo "hello ${Name}"
                 stash name: 'buildArtifacts', includes: '**/target/*.jar'
             }
