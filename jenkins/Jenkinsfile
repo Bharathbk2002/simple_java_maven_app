@@ -22,10 +22,11 @@ pipeline {
                     file.greet()  
                 }
                 sharedLib()
-                def calc = new calculator()
-                    calc.add(10,20)
-                    calc.sub(20,10)
-               
+                script
+                {
+                    calculator.add(10,20)
+                    calculator.sub(20,10)
+                }
                 echo "hello ${Name}"
                 stash name: 'buildArtifacts', includes: '**/target/*.jar'
             }
