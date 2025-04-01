@@ -6,5 +6,5 @@ def add(x,y)
 
 def sub(a,b)
 {
-    println("sub of ${a} and ${b}: "+(x-y))
+    println("sub of ${a} and ${b}: "+(a-b))
 }
